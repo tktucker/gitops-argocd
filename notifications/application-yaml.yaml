@@ -1,32 +1,24 @@
----
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: nginx
   namespace: argocd
   annotations:
+    # This tells Argo CD: "Send these events to the Slack channel named 'alerts'"
     notifications.argoproj.io/subscribe.on-deployed.slack: alerts
     notifications.argoproj.io/subscribe.on-sync-failed.slack: alerts
     notifications.argoproj.io/subscribe.on-sync-succeeded.slack: alerts
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
-  replicas: 2
-  revisionHistoryLimit: 2
-  selector:
-    matchLabels:
-      app: rollout-bluegreen
-  template:
-    metadata:
-      labels:
-        app: rollout-bluegreen
-    spec:
-      containers:
-      - name: rollouts-demo
-        image: argoproj/rollouts-demo:blue
-        imagePullPolicy: Always
-        ports:
-        - containerPort: 8080
+  project: default
+  source:
+    repoURL: https://github.com/antonputra/lesson-179.git
+    targetRevision: HEAD
+    path: nginx
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: default  # Added destination namespace for the Nginx pods
   syncPolicy:
     automated:
       prune: true
