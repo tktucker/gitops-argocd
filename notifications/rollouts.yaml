@@ -6,7 +6,7 @@ metadata:
     app: rollouts-demo
   annotations:
     # This annotation tells ArgoCD Notifications where to send alerts
-    notifications.argoproj.io/subscribe.on-deployed.slack: my-slack-channel
+    notifications.argoproj.io/subscribe.on-deployed.slack: k8s-deployment-status
 spec:
   replicas: 2
   selector:
