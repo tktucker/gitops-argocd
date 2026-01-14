@@ -9,6 +9,20 @@ data:
   # 1. THE SERVICE (You have this)
   service.slack: |
     token: $slack-token
+ 
+  template.app-deployed: |
+    slack:
+      attachments: |
+        [{
+          "title": "{{.app.metadata.name}}",
+          "title_link": "{{.context.argocdUrl}}/applications/{{.app.metadata.name}}",
+          "color": "{{if eq .app.status.operationState.phase "Succeeded"}}good{{else}}danger{{end}}",
+          "fields": [
+            {"title": "Sync Status", "value": "{{.app.status.sync.status}}", "short": true},
+            {"title": "Health Status", "value": "{{.app.status.health.status}}", "short": true},
+            {"title": "Repository", "value": "{{.app.spec.source.repoURL}}", "short": false}
+          ]
+        }]
 
   # 2. THE TRIGGER (THIS IS MISSING)
   # This maps the name used in your Application to actual logic
