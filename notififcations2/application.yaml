@@ -1,0 +1,25 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: rollouts-demo-app
+  namespace: argocd
+  annotations:
+    # This triggers a notification to Slack on sync success
+    notifications.argoproj.io/subscribe.on-sync-succeeded.slack: k8s-deployment-status
+    # This triggers a notification to Slack if the sync fails
+    notifications.argoproj.io/subscribe.on-sync-failed.slack: k8s-deployment-status
+spec:
+  project: default
+  source:
+    repoURL: 'https://github.com/tktucker/gitops-argocd.git'
+    targetRevision: HEAD
+    path: manifests
+  destination:
+    server: 'https://kubernetes.default.svc'
+    namespace: demo-apps
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+    - CreateNamespace=true

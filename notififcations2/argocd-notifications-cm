@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: argocd-notifications-cm
+  namespace: argocd
+data:
+  service.slack: |
+    token: $slack-token # Reference to secret
+  template.rollout-status: |
+    slack:
+      attachments: |
+        [{
+          "title": "{{ .app.metadata.name }} is {{ .app.status.sync.status }}",
+          "color": "{{ if eq .app.status.sync.status "Synced" }}good{{ else }}danger{{ end }}",
+          "fields": [
+            {"title": "Repository", "value": "{{ .app.spec.source.repoURL }}", "short": true},
+            {"title": "Channel", "value": "k8s-deployment-status", "short": true}
+          ]
+        }]
