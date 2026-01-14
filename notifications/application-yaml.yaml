@@ -11,13 +11,22 @@ metadata:
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
-  project: default
-  source:
-    repoURL: https://github.com/antonputra/lesson-179.git
-    targetRevision: HEAD
-    path: nginx
-  destination:
-    server: https://kubernetes.default.svc
+  replicas: 2
+  revisionHistoryLimit: 2
+  selector:
+    matchLabels:
+      app: rollout-bluegreen
+  template:
+    metadata:
+      labels:
+        app: rollout-bluegreen
+    spec:
+      containers:
+      - name: rollouts-demo
+        image: argoproj/rollouts-demo:blue
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8080
   syncPolicy:
     automated:
       prune: true
