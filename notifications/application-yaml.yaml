@@ -1,31 +1,27 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: nginx
+  name: rollouts-demo
   namespace: argocd
   annotations:
-    # This tells Argo CD: "Send these events to the Slack channel named 'alerts'"
+    # Notification triggers
     notifications.argoproj.io/subscribe.on-deployed.slack: k8s-deployment-status
     notifications.argoproj.io/subscribe.on-sync-failed.slack: k8s-deployment-status
     notifications.argoproj.io/subscribe.on-sync-succeeded.slack: k8s-deployment-status
-  finalizers:
-    - resources-finalizer.argocd.argoproj.io
 spec:
   project: default
   source:
-    repoURL: https://github.com/antonputra/lesson-179.git
+    repoURL: https://github.com/argoproj/argoproj
     targetRevision: HEAD
-    path: nginx
+    path: rollouts-demo
+    # If you are using a raw manifest or helm, 
+    # ensure the image is set to argoproj/rollouts-demo:blue
   destination:
     server: https://kubernetes.default.svc
-    namespace: default  # Added destination namespace for the Nginx pods
+    namespace: rollouts-demo-ns
   syncPolicy:
     automated:
       prune: true
       selfHeal: true
-      allowEmpty: false
     syncOptions:
-      - Validate=true
-      - CreateNamespace=false
-      - PrunePropagationPolicy=foreground
-      - PruneLast=true
+      - CreateNamespace=true
