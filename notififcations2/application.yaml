@@ -13,7 +13,7 @@ spec:
   source:
     repoURL: 'https://github.com/tktucker/gitops-argocd.git'
     targetRevision: HEAD
-    path: notifications2
+    path: notififcations2
   destination:
     server: 'https://kubernetes.default.svc'
     namespace: demo-apps
