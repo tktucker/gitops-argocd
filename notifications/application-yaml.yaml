@@ -5,9 +5,9 @@ metadata:
   namespace: argocd
   annotations:
     # This tells Argo CD: "Send these events to the Slack channel named 'alerts'"
-    notifications.argoproj.io/subscribe.on-deployed.slack: alerts
-    notifications.argoproj.io/subscribe.on-sync-failed.slack: alerts
-    notifications.argoproj.io/subscribe.on-sync-succeeded.slack: alerts
+    notifications.argoproj.io/subscribe.on-deployed.slack: k8s-deployment-status
+    notifications.argoproj.io/subscribe.on-sync-failed.slack: k8s-deployment-status
+    notifications.argoproj.io/subscribe.on-sync-succeeded.slack: k8s-deployment-status
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
