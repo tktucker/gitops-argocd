@@ -4,7 +4,7 @@ metadata:
   name: rollouts-demo
   namespace: demo-apps
 spec:
-  replicas: 2
+  replicas: 3
   selector:
     matchLabels:
       app: rollouts-demo
