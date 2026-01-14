@@ -1,0 +1,30 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: argocd-notifications-cm
+  namespace: argocd
+data:
+  argocdUrl: https://argocd.example.com
+  
+  # 1. THE SERVICE (You have this)
+  service.slack: |
+    token: $slack-token
+
+  # 2. THE TRIGGER (THIS IS MISSING)
+  # This maps the name used in your Application to actual logic
+  trigger.on-sync-succeeded: |
+    - description: Application syncing has succeeded
+      send: [app-deployed]
+      # Added 'app.status.operationState != nil' to prevent the crash
+      when: app.status.operationState != nil and app.status.operationState.phase in ['Succeeded']
+  trigger.on-sync-failed: |
+    - description: Application syncing has failed
+      send: [app-deployed] # You can use the same template as success for now
+      when: app.status.operationState != nil and app.status.operationState.phase in ['Error', 'Failed']
+
+  # 3. THE TEMPLATE (THIS IS ALSO REQUIRED)
+  # This defines what the Slack message actually looks like
+  trigger.on-deployed: |
+    - description: Application is deployed and healthy
+      send: [app-deployed]
+      when: app.status.operationState != nil and app.status.operationState.phase in ['Succeeded'] and app.status.health.status == 'Healthy'
