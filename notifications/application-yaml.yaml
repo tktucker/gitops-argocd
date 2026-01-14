@@ -9,7 +9,6 @@ metadata:
     notifications.argoproj.io/subscribe.on-sync-failed.slack: k8s-deployment-status
     notifications.argoproj.io/subscribe.on-sync-succeeded.slack: k8s-deployment-status
 spec:
-  replicas: 2
   project: default
   source:
     repoURL: https://github.com/argoproj/argoproj
